@@ -64,7 +64,7 @@ export async function POST(request: Request) {
     );
   } catch (error) {
     return NextResponse.json(
-      { success: false, message: "Internal server error" },
+      { success: false, message: "Internal Server Error while Registering the User !" },
       { status: 500 }
     );
   }
