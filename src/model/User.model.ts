@@ -25,6 +25,7 @@ export interface User extends Document {
   role: string;
   cart: CartItem[];
   addresses: Address[];
+  expiresAt?: Date;
 }
 
 const AddressSchema = new Schema<Address>({
@@ -83,9 +84,23 @@ const UserSchema: Schema<User> = new Schema(
       type: [AddressSchema],
       default: [],
     },
+    expiresAt: {
+      type: Date,
+      default: () => new Date(Date.now() + 10 * 60 * 1000), // 10 min from creation
+      expires: 0,
+    },
   },
   { timestamps: true }
 );
+
+UserSchema.pre("save", function (next) {
+  if (this.verified) {
+    this.expiresAt = undefined; 
+  } else if (!this.expiresAt) {
+    this.expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+  }
+  next();
+});
 
 export const UserModel =
   (mongoose.models.User as mongoose.Model<User>) ||

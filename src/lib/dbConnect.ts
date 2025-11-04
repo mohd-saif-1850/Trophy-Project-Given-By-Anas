@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { startUserCleanupJob } from "@/lib/cleanupUsers";
 
 type ConnectionObject = {
   isConnected?: number;
@@ -16,6 +17,8 @@ const dbConnect = async (): Promise<void> => {
     const connect = await mongoose.connect(process.env.MONGODB_URI || "");
     connection.isConnected = connect.connections[0].readyState;
     console.log("Database Connected Successfully !");
+
+    startUserCleanupJob();
   } catch (error) {
     console.log("Database Failed to Connect !");
     process.exit(1);

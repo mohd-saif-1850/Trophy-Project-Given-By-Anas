@@ -43,7 +43,8 @@ export async function POST(request: Request) {
     const hashedPassword = await bcrypt.hash(password, 10);
     const otp = Math.floor(100000 + Math.random() * 900000);
     const otpExpiry = new Date(Date.now() + 10 * 60 * 1000);
-
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000)
+    
     const newUser = new UserModel({
       name,
       mobileNumber,
@@ -52,6 +53,7 @@ export async function POST(request: Request) {
       verified: false,
       otp,
       otpExpiry,
+      expiresAt,
     });
 
     await newUser.save();

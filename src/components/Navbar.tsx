@@ -54,7 +54,6 @@ export default function Navbar() {
           A.H <span className="text-blue-600">Handicraft</span>
         </Link>
 
-        {/* Desktop Navigation */}
         <div className="hidden md:flex items-center space-x-8">
           <Link href="/" className={linkClass("/")}>
             Home
@@ -87,7 +86,6 @@ export default function Navbar() {
           </button>
         </div>
 
-        {/* Mobile Menu Button */}
         <button
           onClick={() => setMenuOpen(!menuOpen)}
           className="md:hidden p-2 rounded-md hover:bg-gray-100 transition"
@@ -96,7 +94,6 @@ export default function Navbar() {
         </button>
       </div>
 
-      {/* Mobile Menu */}
       {menuOpen && (
         <div className="md:hidden bg-white border-t border-gray-200 shadow-sm">
           <div className="flex flex-col p-4 space-y-4 text-gray-700">
@@ -149,7 +146,6 @@ export default function Navbar() {
 
             <hr className="border-gray-200" />
 
-            {/* Common Links */}
             <Link
               href="/about"
               onClick={() => setMenuOpen(false)}
@@ -172,7 +168,6 @@ export default function Navbar() {
               <Bug size={18} /> Report a Bug
             </Link>
 
-            {/* Logout BELOW after report bug */}
             {session && (
               <button
                 onClick={handleLogout}
@@ -185,7 +180,6 @@ export default function Navbar() {
         </div>
       )}
 
-      {/* Desktop Dropdown */}
       {menuOpen && (
         <div className="hidden md:absolute md:right-10 md:top-16 md:bg-white md:border md:rounded-xl md:shadow-md md:w-60 md:flex md:flex-col p-3 space-y-3">
           {!session ? (
