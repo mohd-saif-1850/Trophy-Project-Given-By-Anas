@@ -11,6 +11,7 @@ export async function POST(request: Request) {
     const name = formData.get("name") as string;
     const price = Number(formData.get("price"));
     const category = formData.get("category") as string;
+    const discription = formData.get("discription") as string;
     const image = formData.get("image") as File | null;
 
     if (!name) {
@@ -45,6 +46,7 @@ export async function POST(request: Request) {
       price,
       category,
       image: upload.url,
+      discription
     });
 
     await newTrophy.save();

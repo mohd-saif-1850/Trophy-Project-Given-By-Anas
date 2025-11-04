@@ -5,6 +5,7 @@ export interface Trophy extends Document {
   price: number;
   category?: string;
   image?: string;
+  discription? : string,
 }
 
 const TrophySchema = new Schema<Trophy>(
@@ -29,6 +30,9 @@ const TrophySchema = new Schema<Trophy>(
       default : "https://res.cloudinary.com/ddnxjo72z/image/upload/v1762186666/Gemini_Generated_Image_jwrmrsjwrmrsjwrm_le67jl.png"
 
     },
+    discription : {
+      type : String
+    }
   },
   { timestamps: true }
 );

@@ -63,6 +63,7 @@ export const authOptions: NextAuthOptions = {
         token.email = user.email;
         token.mobileNumber = user.mobileNumber;
         token.verified = user.verified;
+        token.role = user.role;
       }
       return token;
     },
@@ -74,6 +75,7 @@ export const authOptions: NextAuthOptions = {
         session.user.email = token.email;
         session.user.mobileNumber = token.mobileNumber;
         session.user.verified = token.verified;
+        session.user.role = token.role;
       }
       return session;
     },
