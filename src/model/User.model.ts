@@ -23,9 +23,9 @@ export interface User extends Document {
   otp?: number;
   otpExpiry?: Date;
   role: string;
-  cart: CartItem[];
   addresses: Address[];
   expiresAt?: Date;
+
 }
 
 const AddressSchema = new Schema<Address>({
@@ -71,14 +71,6 @@ const UserSchema: Schema<User> = new Schema(
     role: {
       type: String,
       default: "user",
-    },
-    cart: {
-      type: [
-        {
-          trophyId: { type: Schema.Types.ObjectId, ref: "Trophy" },
-          quantity: { type: Number, default: 1 },
-        },
-      ],
     },
     addresses: {
       type: [AddressSchema],

@@ -16,24 +16,22 @@ export interface Order extends Document {
     postalCode: string;
     country: string;
   };
+  msg?: string;
   totalAmount: number;
   status: string;
+  email: string;
+  primaryNumber?: string;
+  alternateNumber?: string | null;
+  deliveryDate?: string;
+  otp?: string
 }
 
 const OrderSchema: Schema<Order> = new Schema(
   {
-    userId: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
+    userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
     items: [
       {
-        trophyId: {
-          type: Schema.Types.ObjectId,
-          ref: "Trophy",
-          required: true,
-        },
+        trophyId: { type: Schema.Types.ObjectId, ref: "Trophy", required: true },
         quantity: { type: Number, required: true },
         price: { type: Number, required: true },
       },
@@ -43,15 +41,26 @@ const OrderSchema: Schema<Order> = new Schema(
       city: { type: String, required: true },
       state: { type: String, required: true },
       postalCode: { type: String, required: true },
-      country: { type: String, required: true },
+      country: { type: String, required: true, default: "India" },
     },
-    totalAmount: {
-      type: Number,
-      required: true,
+    msg: {
+      type: String
     },
-    status: {
+    otp: {
+      type: String
+    },
+    totalAmount: { type: Number, required: true },
+    status: { type: String, default: "Pending" },
+    email: { type: String, required: true },
+    primaryNumber: { type: String },
+    alternateNumber: { type: String },
+    deliveryDate: {
       type: String,
-      default: "Pending",
+      default: () => {
+        const date = new Date();
+        date.setDate(date.getDate() + 5);
+        return date.toISOString().split("T")[0];
+      },
     },
   },
   { timestamps: true }

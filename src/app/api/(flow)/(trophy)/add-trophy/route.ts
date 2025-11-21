@@ -12,6 +12,7 @@ export async function POST(request: Request) {
     const price = Number(formData.get("price"));
     const category = formData.get("category") as string;
     const discription = formData.get("discription") as string;
+    const priority = formData.get("priority");
     const image = formData.get("image") as File | null;
 
     if (!name) {
@@ -25,6 +26,7 @@ export async function POST(request: Request) {
     if (!image) {
       throw new Error("Trophy Image is Required !");
     }
+
 
     const existingTrophy = await TrophyModel.findOne({ name });
 
@@ -46,7 +48,8 @@ export async function POST(request: Request) {
       price,
       category,
       image: upload.url,
-      discription
+      discription,
+      priority: priority ? priority : 7
     });
 
     await newTrophy.save();

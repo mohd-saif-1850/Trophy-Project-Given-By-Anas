@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import axios from "axios";
@@ -17,11 +17,60 @@ export default function AddTrophyPage() {
     category: "",
     discription: "",
     image: null as File | null,
+    priority: "7", // default priority
   });
 
   const [loading, setLoading] = useState(false);
   const [wordCount, setWordCount] = useState(0);
   const MAX_WORDS = 500;
+
+  const [categories, setCategories] = useState<string[]>([]);
+  const [filteredCategories, setFilteredCategories] = useState<string[]>([]);
+  const categoryRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await axios.get("/api/get-all-trophies");
+        if (res.data.success) {
+          const cats: string[] = Array.from(
+            new Set(
+              res.data.data
+                .map((t: any) => t.category)
+                .filter((c: any): c is string => typeof c === "string" && c.trim() !== "")
+            )
+          );
+          setCategories(cats);
+        }
+      } catch (error) {
+        console.log("Error fetching categories");
+      }
+    };
+    fetchCategories();
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (categoryRef.current && !categoryRef.current.contains(e.target as Node)) {
+        setFilteredCategories([]);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm({ ...form, category: e.target.value });
+
+    if (e.target.value.trim() === "") {
+      setFilteredCategories([]);
+    } else {
+      const filtered = categories.filter((c) =>
+        c.toLowerCase().includes(e.target.value.toLowerCase())
+      );
+      setFilteredCategories(filtered);
+    }
+  };
 
   useEffect(() => {
     if (status === "loading") return;
@@ -36,9 +85,9 @@ export default function AddTrophyPage() {
 
     if (name === "discription") {
       const chars = value.length;
-        if (chars <= MAX_WORDS) {
-            setForm({ ...form, [name]: value });
-            setWordCount(chars);
+      if (chars <= MAX_WORDS) {
+        setForm({ ...form, [name]: value });
+        setWordCount(chars);
       }
     } else {
       setForm({ ...form, [name]: value });
@@ -78,19 +127,25 @@ export default function AddTrophyPage() {
       data.append("price", form.price);
       data.append("category", form.category);
       data.append("discription", form.discription);
+      data.append("priority", form.priority);
+
       if (form.image) data.append("image", form.image);
 
       const res = await axios.post("/api/add-trophy", data);
 
       if (res.data.success) {
         toast.success(res.data.message || "Trophy added successfully");
+
+        // RESET FORM INCLUDING PRIORITY
         setForm({
           name: "",
           price: "",
           category: "",
           discription: "",
           image: null,
+          priority: "7",
         });
+
         setWordCount(0);
       } else {
         toast.error(res.data.message || "Failed to add trophy");
@@ -124,8 +179,12 @@ export default function AddTrophyPage() {
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-5">
+
+          {/* Name */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Name
+            </label>
             <input
               type="text"
               name="name"
@@ -133,12 +192,15 @@ export default function AddTrophyPage() {
               value={form.name}
               onChange={handleChange}
               required
-              className="w-full border border-gray-300 rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2.5"
             />
           </div>
 
+          {/* Price */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Price</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Price
+            </label>
             <input
               type="number"
               name="price"
@@ -146,22 +208,61 @@ export default function AddTrophyPage() {
               value={form.price}
               onChange={handleChange}
               required
-              className="w-full border border-gray-300 rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2.5"
             />
           </div>
 
+          {/* Priority */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Priority
+            </label>
+            <select
+              name="priority"
+              value={form.priority}
+              onChange={(e) => setForm({ ...form, priority: e.target.value })}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2.5"
+            >
+              {[1, 2, 3, 4, 5, 6, 7].map((num) => (
+                <option key={num} value={num}>
+                  {num}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Category */}
+          <div ref={categoryRef} className="relative">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Category
+            </label>
             <input
               type="text"
               name="category"
               placeholder="Enter category"
               value={form.category}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+              onChange={handleCategoryChange}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2.5"
             />
+            {filteredCategories.length > 0 && (
+              <ul className="absolute z-10 bg-white border border-gray-300 rounded-lg w-full mt-1 max-h-40 overflow-auto shadow-lg">
+                {filteredCategories.map((cat, idx) => (
+                  <li
+                    key={idx}
+                    className="px-3 py-2 hover:bg-indigo-100 cursor-pointer"
+                    onClick={() => {
+                      setForm({ ...form, category: cat });
+                      setFilteredCategories([]);
+                    }}
+                  >
+                    {cat}
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
 
+          {/* Description */}
           <div>
             <div className="flex justify-between items-center mb-1">
               <label className="block text-sm font-medium text-gray-700">
@@ -169,7 +270,9 @@ export default function AddTrophyPage() {
               </label>
               <span
                 className={`text-xs ${
-                  wordCount >= MAX_WORDS * 0.9 ? "text-red-600" : "text-gray-500"
+                  wordCount >= MAX_WORDS * 0.9
+                    ? "text-red-600"
+                    : "text-gray-500"
                 }`}
               >
                 {MAX_WORDS - wordCount} Characters Left
@@ -177,28 +280,19 @@ export default function AddTrophyPage() {
             </div>
             <textarea
               name="discription"
-              placeholder="Write a short description (max 500 words)"
+              placeholder="Write a short description"
               value={form.discription}
               onChange={handleChange}
               rows={5}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition resize-none"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2.5 resize-none"
             />
-            <div className="h-1 bg-gray-200 rounded-full mt-1">
-              <div
-                className={`h-1 rounded-full transition-all ${
-                  wordCount < MAX_WORDS * 0.8
-                    ? "bg-indigo-500"
-                    : wordCount < MAX_WORDS
-                    ? "bg-yellow-500"
-                    : "bg-red-500"
-                }`}
-                style={{ width: `${(wordCount / MAX_WORDS) * 100}%` }}
-              ></div>
-            </div>
           </div>
 
+          {/* Image */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Upload Image</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Upload Image
+            </label>
             <input
               type="file"
               accept="image/*"
@@ -212,7 +306,9 @@ export default function AddTrophyPage() {
             type="submit"
             disabled={loading}
             className={`w-full py-2.5 rounded-lg text-white font-medium transition ${
-              loading ? "bg-indigo-400 cursor-not-allowed" : "bg-indigo-600 hover:bg-indigo-700"
+              loading
+                ? "bg-indigo-400 cursor-not-allowed"
+                : "bg-indigo-600 hover:bg-indigo-700"
             }`}
           >
             {loading ? "Adding..." : "Add Trophy"}

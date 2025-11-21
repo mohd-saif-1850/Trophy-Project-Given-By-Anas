@@ -1,37 +1,34 @@
 import nodemailer from "nodemailer";
-import { VerifyOtpEmail } from "@/emails/layoutEmail";
+import { OrderCancelledEmail } from "@/emails/OrderCancelledEmail";
 import { render } from "@react-email/render";
 
-export const sendVerificationEmail = async (
+export const sendOrderCancelledEmail = async (
   email: string,
   username: string,
-  otp: string
+  msg: string,
+  orderId: string
 ) => {
   try {
-    // Render email template
     const emailHtml = await render(
-      <VerifyOtpEmail username={username} otp={otp} />
+      <OrderCancelledEmail username={username} msg={msg} orderId={orderId} />
     );
 
-    // Create nodemailer transporter
     const transporter = nodemailer.createTransport({
-      service: "gmail", // or "smtp", depends on your provider
+      service: "gmail",
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
       },
     });
 
-    // Send email
     await transporter.sendMail({
       from: `"A.H Handicraft" <${process.env.EMAIL_USER}>`,
       to: email,
-      subject: "Verify Your Email Address",
+      subject: `Order #${orderId} Cancelled`,
       html: emailHtml,
     });
-
   } catch (error) {
-    console.error(error);
-    throw new Error("Failed to Send Verification Email!");
+    console.error("Cancel email error:", error);
+    throw new Error("Failed to send cancellation email!");
   }
 };

@@ -6,6 +6,7 @@ export interface Trophy extends Document {
   category?: string;
   image?: string;
   discription? : string,
+  priority? : number
 }
 
 const TrophySchema = new Schema<Trophy>(
@@ -32,6 +33,10 @@ const TrophySchema = new Schema<Trophy>(
     },
     discription : {
       type : String
+    },
+    priority: {
+      type: Number,
+      enum: [1,2,3,4,5,6,7]
     }
   },
   { timestamps: true }

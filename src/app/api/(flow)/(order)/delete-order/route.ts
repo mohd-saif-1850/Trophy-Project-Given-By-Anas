@@ -5,9 +5,9 @@ import { OrderModel } from "@/model/Order.model";
 export async function DELETE(request: Request) {
   try {
     await dbConnect();
+
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
-    const msg = searchParams.get("msg") || undefined;
 
     if (!id) throw new Error("Order ID is required!");
 
@@ -18,19 +18,16 @@ export async function DELETE(request: Request) {
       throw new Error("Only pending orders can be cancelled!");
     }
 
-    order.status = "Cancelled";
-
-    if (msg) order.msg = msg;
-
+    order.status = "cancelled";
     await order.save();
 
     return NextResponse.json(
       { success: true, message: "Order cancelled successfully!" },
       { status: 200 }
     );
-  } catch (err: any) {
+  } catch (error: any) {
     return NextResponse.json(
-      { success: false, message: err.message || "Failed to cancel order!" },
+      { success: false, message: error.message || "Failed to cancel order!" },
       { status: 500 }
     );
   }

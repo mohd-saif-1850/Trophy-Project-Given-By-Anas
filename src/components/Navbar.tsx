@@ -16,6 +16,9 @@ import {
   Home,
   Search,
   Shield,
+  User2,
+  UserCircle,
+  ShoppingBag
 } from "lucide-react";
 import toast from "react-hot-toast";
 import axios from "axios";
@@ -25,24 +28,6 @@ interface Trophy {
   name: string;
   image?: string;
 }
-
-const ADMIN_LINKS = [
-  { href: "/admin", label: "Admin Panel", icon: Shield },
-  { href: "/admin/trophies", label: "Manage Trophies", icon: Bug },
-  { href: "/admin/orders", label: "All Orders", icon: Info },
-];
-
-const USER_LINKS = [
-  { href: "/cart", label: "Cart", icon: ShoppingCart },
-  { href: "/orders", label: "My Orders", icon: Info },
-  { href: "/profile", label: "Profile", icon: User },
-];
-
-const PUBLIC_LINKS = [
-  { href: "/about", label: "About Us", icon: Info },
-  { href: "/contact", label: "Contact Us", icon: Phone },
-  { href: "/report", label: "Report a Bug", icon: Bug },
-];
 
 export default function Navbar() {
   const { data: session } = useSession();
@@ -59,10 +44,6 @@ export default function Navbar() {
   const email = session?.user?.email;
   const isAdmin = role === "admin" || email === "admin@handicraft.com";
   const isUser = role === "user";
-  const routes = [...(isAdmin ? ADMIN_LINKS : isUser ? USER_LINKS : [])];
-
-  // Add Home at the top
-  const allRoutes = [{ href: "/", label: "Home", icon: Home }, ...routes];
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 10);
@@ -70,7 +51,6 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Close suggestion dropdown if clicked outside
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
@@ -81,7 +61,6 @@ export default function Navbar() {
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
 
-  // Live search suggestions
   useEffect(() => {
     if (!search.trim()) return setSuggestions([]);
     const fetchSuggestions = async () => {
@@ -93,14 +72,14 @@ export default function Navbar() {
           )
           .slice(0, 5);
         setSuggestions(matches);
-      } catch (error) {}
+      } catch {}
     };
     fetchSuggestions();
   }, [search]);
 
   const handleLogout = async () => {
     await signOut({ redirect: false });
-    toast.success("You have been logged out!");
+    toast.success("Logged out!");
     setTimeout(() => router.push("/"), 1200);
   };
 
@@ -119,6 +98,48 @@ export default function Navbar() {
       pathname === path ? "text-blue-600 font-semibold" : "text-gray-700"
     }`;
 
+  // Desktop Links
+  let desktopLinks: { href: string; label: string; icon?: any }[] = [{ href: "/", label: "Home" }];
+  if (isUser) desktopLinks.push({ href: "/cart", label: "Cart", icon: ShoppingCart });
+  if (isAdmin) {
+    desktopLinks.push({ href: "/manage-trophies", label: "Manage Trophies" });
+    desktopLinks.push({ href: "/get-all-orders", label: "All Orders" });
+  }
+  if (!session) {
+    desktopLinks.push({ href: "/sign-in", label: "Login" });
+    desktopLinks.push({ href: "/sign-up", label: "Signup" });
+  }
+
+  // Hamburger / Mobile Links (only extra links)
+  let mobileLinks: { href: string; label: string; icon: any }[] = [];
+  if (!session) {
+    mobileLinks = [
+      { href: "/", label: "Home", icon: Home },
+      { href: "/sign-in", label: "Login", icon: User2 },
+      { href: "/sign-up", label: "Sign Up", icon: UserCircle },
+      { href: "/about", label: "About Us", icon: Info },
+      { href: "/contact", label: "Contact Us", icon: Phone },
+      { href: "/report", label: "Report a Bug", icon: Bug },
+    ];
+  } else if (isUser) {
+    mobileLinks = [
+      { href: "/profile", label: "Profile", icon: User },
+      { href: "/my-orders", label: "My Orders", icon: Info },
+      { href: "/about", label: "About Us", icon: Info },
+      { href: "/contact", label: "Contact Us", icon: Phone },
+      { href: "/report", label: "Report a Bug", icon: Bug },
+    ];
+  } else if (isAdmin) {
+    mobileLinks = [
+      { href: "/", label: "Home", icon: Home },
+      { href: "/all-orders", label: "All Orders", icon: ShoppingBag },
+      { href: "/admin", label: "Admin Panel", icon: Shield },
+      { href: "/about", label: "About Us", icon: Info },
+      { href: "/contact", label: "Contact Us", icon: Phone },
+      { href: "/report", label: "Report a Bug", icon: Bug },
+    ];
+  }
+
   return (
     <nav
       className={`fixed top-0 left-0 w-full z-50 transition-all ${
@@ -126,7 +147,6 @@ export default function Navbar() {
       }`}
     >
       <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
-        {/* Logo */}
         <Link
           href="/"
           className="text-2xl font-semibold tracking-wide text-gray-800"
@@ -134,7 +154,6 @@ export default function Navbar() {
           A.H <span className="text-blue-600">Handicraft</span>
         </Link>
 
-        {/* Search */}
         <div className="flex-1 mx-4 relative" ref={searchRef}>
           <form
             onSubmit={handleSearchSubmit}
@@ -155,7 +174,6 @@ export default function Navbar() {
             </button>
           </form>
 
-          {/* Suggestions with images */}
           {suggestions.length > 0 && (
             <ul className="absolute top-full left-0 w-full bg-white border rounded-md shadow mt-1 z-50">
               {suggestions.map((item) => (
@@ -181,20 +199,19 @@ export default function Navbar() {
           )}
         </div>
 
-        {/* Desktop & Mobile Hamburger */}
         <div className="flex items-center gap-3">
-          {/* Desktop links */}
           <div className="hidden md:flex items-center space-x-6">
-            {allRoutes.map(({ href, label, icon: Icon }) => (
-              <Link key={href} href={href} className={linkClass(href)}>
-                <div className="flex items-center gap-1">
-                  <Icon size={18} /> {label}
-                </div>
+            {desktopLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`flex items-center gap-2 ${linkClass(link.href)}`}
+              >
+                {link.icon && <link.icon size={18} />} {link.label}
               </Link>
             ))}
           </div>
 
-          {/* Hamburger for both desktop & mobile */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
             className="p-2 rounded-md hover:bg-gray-100 transition"
@@ -204,42 +221,27 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Dropdown menu */}
       {menuOpen && (
         <div className="absolute right-6 md:right-10 top-16 bg-white border rounded-xl shadow-md w-64 md:w-60 flex flex-col p-4 space-y-3 z-50">
-          {!session ? (
-            <>
-              {PUBLIC_LINKS.map(({ href, label, icon: Icon }) => (
-                <Link
-                  key={href}
-                  href={href}
-                  onClick={() => setMenuOpen(false)}
-                  className={`flex items-center gap-2 ${linkClass(href)}`}
-                >
-                  <Icon size={18} /> {label}
-                </Link>
-              ))}
-            </>
-          ) : (
-            <>
-              {allRoutes.map(({ href, label, icon: Icon }) => (
-                <Link
-                  key={href}
-                  href={href}
-                  onClick={() => setMenuOpen(false)}
-                  className={`flex items-center gap-2 ${linkClass(href)}`}
-                >
-                  <Icon size={18} /> {label}
-                </Link>
-              ))}
+          
+          {mobileLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              onClick={() => setMenuOpen(false)}
+              className={`flex items-center gap-2 ${linkClass(link.href)}`}
+            >
+              <link.icon size={18} /> {link.label}
+            </Link>
+          ))}
 
-              <button
-                onClick={handleLogout}
-                className="flex items-center justify-center gap-2 py-2 rounded-md bg-red-500 hover:bg-red-600 text-white transition"
-              >
-                <LogOut size={18} /> Logout
-              </button>
-            </>
+          {session && (
+            <button
+              onClick={handleLogout}
+              className="flex items-center justify-center gap-2 py-2 rounded-md bg-red-500 hover:bg-red-600 text-white transition"
+            >
+              <LogOut size={18} /> Logout
+            </button>
           )}
         </div>
       )}

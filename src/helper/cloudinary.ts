@@ -41,9 +41,6 @@ export async function uploadToCloudinary(file: File, folder?: string) {
   }
 }
 
-/**
- * Delete image from Cloudinary using its public_id
- */
 export async function deleteFromCloudinary(publicId: string) {
   try {
     const result = await cloudinary.uploader.destroy(publicId);

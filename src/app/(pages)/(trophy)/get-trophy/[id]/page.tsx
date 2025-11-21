@@ -76,7 +76,6 @@ export default function TrophyDetailPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 text-gray-800 p-8">
-      {/* Main Trophy Section */}
       <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center gap-10 bg-white rounded-2xl shadow-md p-8">
         <div className="relative w-full md:w-1/2 h-80">
           <Image
@@ -108,11 +107,10 @@ export default function TrophyDetailPage() {
         </div>
       </div>
 
-      {/* Related Trophies Section */}
       <div className="max-w-6xl mx-auto mt-16">
         <h2 className="text-2xl font-semibold mb-6">Related Trophies</h2>
         {related.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
             {related.slice(0, 20).map((item) => (
               <div
                 key={item._id}
