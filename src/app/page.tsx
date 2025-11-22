@@ -119,7 +119,7 @@ export default function HomePage() {
           transition={{ duration: 0.5 }}
           className="text-3xl sm:text-4xl font-extrabold text-center tracking-tight"
         >
-          AH Handicraft <span className="text-blue-600">Collections</span>
+          Aala Hazrat <span className="text-blue-600">Collections</span>
         </motion.h1>
 
         <div className="relative w-full h-[200px] sm:h-[300px] overflow-hidden rounded-2xl shadow-lg bg-gray-200">
