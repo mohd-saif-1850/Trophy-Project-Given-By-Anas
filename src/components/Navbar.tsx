@@ -150,7 +150,7 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto flex items-center justify-between px-2 md:px-6 py-4">
         <Link
           href="/"
-          className="text-xl md:text-2xl font-semibold text:sm tracking-wide text-gray-800"
+          className="md:text-2xl font-semibold text:sm tracking-wide text-gray-800"
         >
           A.H <span className="text-blue-600">Handicraft</span>
         </Link>
@@ -193,7 +193,7 @@ export default function Navbar() {
                     alt={item.name}
                     className="w-10 h-10 object-contain rounded-md"
                   />
-                  <span>{item.name}</span>
+                  <span className="w-20">{item.name}</span>
                 </li>
               ))}
             </ul>
