@@ -3,6 +3,7 @@ import dbConnect from "@/lib/dbConnect";
 import { FeedbackModel } from "@/model/Feedback.model";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/option";
+import { OrderModel } from "@/model/Order.model";
 
 export async function DELETE(request: Request) {
   try {
@@ -18,7 +19,7 @@ export async function DELETE(request: Request) {
 
     if (!id) throw new Error("Feedback ID is required!");
 
-    const feedback = await FeedbackModel.findById(id);
+    const feedback = await OrderModel.findById(id);
     if (!feedback) throw new Error("Feedback not found!");
 
     if (feedback.email !== session.user.email) {

@@ -43,6 +43,7 @@ export default function TrophyDetailPage() {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
   const [showReviewBox, setShowReviewBox] = useState(false);
+  const [subReview,setSubReview] = useState(false)
 
   const avgRating =
     reviews.length > 0
@@ -100,7 +101,7 @@ export default function TrophyDetailPage() {
   }, [id]);
 
   const handleAddToCart = () => {
-    if (!trophy) return;
+    if (!trophy) return toast.error("Trophy Not Found !");
 
     addToLocalCart({
       trophyId: trophy._id,
@@ -114,13 +115,17 @@ export default function TrophyDetailPage() {
   };
 
   const submitReview = async () => {
+    
     if (!rating) return toast.error("Select rating");
+    setSubReview(true)
 
     const res = await axios.post("/api/add-review", {
       rating,
       comment,
       trophyId: id,
     });
+
+    setSubReview(false)
 
     if (res.data.success) {
       toast.success("Review added");
@@ -133,6 +138,7 @@ export default function TrophyDetailPage() {
       setShowReviewBox(false);
     } else {
       toast.error(res.data.message);
+      setSubReview(false)
     }
   };
 
@@ -182,7 +188,7 @@ export default function TrophyDetailPage() {
 
           <button
             onClick={handleAddToCart}
-            className="px-6 py-3 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white rounded-xl flex items-center gap-2 transition"
+            className="px-6 py-3 cursor-pointer bg-blue-600 hover:bg-blue-700 active:scale-95 text-white rounded-xl flex items-center gap-2 transition"
           >
             <ShoppingCart className="w-5 h-5" /> Add to Cart
           </button>
@@ -195,7 +201,7 @@ export default function TrophyDetailPage() {
 
           <button
             onClick={() => setShowReviewBox(!showReviewBox)}
-            className="p-2 border rounded-xl active:scale-95"
+            className="p-2 cursor-pointer border rounded-xl active:scale-95"
           >
             {showReviewBox ? <ChevronUp /> : <ChevronDown />}
           </button>
@@ -224,12 +230,21 @@ export default function TrophyDetailPage() {
               placeholder="Write something"
             />
 
-            <button
+            {subReview ? (
+              <button
               onClick={submitReview}
-              className="px-6 py-3 bg-black text-white rounded-xl active:scale-95"
+              className="px-6 py-3 cursor-pointer bg-yellow-800 text-white rounded-xl active:scale-95"
+            >
+              Submiting...
+            </button>
+            ) : (
+              <button
+              onClick={submitReview}
+              className="px-6 py-3 cursor-pointer bg-green-800 text-white rounded-xl active:scale-95"
             >
               Submit Review
             </button>
+            )}
           </div>
         )}
       </div>
@@ -291,7 +306,7 @@ export default function TrophyDetailPage() {
                   });
                   toast.success(`${item.name} added to cart`);
                 }}
-                className="mt-3 px-4 py-2 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white rounded-xl w-full"
+                className="mt-3 cursor-pointer px-4 py-2 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white rounded-xl w-full"
               >
                 Add
               </button>

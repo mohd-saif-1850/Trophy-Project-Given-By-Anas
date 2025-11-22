@@ -67,6 +67,7 @@ export default function AdminOrdersPage() {
   const [rangePreset, setRangePreset] = useState<"all" | "7d" | "30d" | "custom">("all");
   const [customFrom, setCustomFrom] = useState<string>("");
   const [customTo, setCustomTo] = useState<string>("");
+  const [deleting,setdeleting] = useState(false) 
 
   const formatINR = useMemo(
     () =>
@@ -168,6 +169,7 @@ export default function AdminOrdersPage() {
 
   const submitCancel = async (orderId: string) => {
     try {
+      setdeleting(true)
       const res = await axios.put(`/api/update-order-status?id=${orderId}`, {
         status: "Cancelled",
         msg: cancelMsg || undefined,
@@ -177,11 +179,14 @@ export default function AdminOrdersPage() {
         setShowCancelModalFor(null);
         setCancelMsg("");
         loadOrders();
+        setdeleting(false)
       } else {
         toast.error(res.data?.message || "Failed to cancel");
+        setdeleting(false)
       }
     } catch {
       toast.error("Failed to cancel order");
+      setdeleting(false)
     }
   };
 
@@ -221,7 +226,7 @@ export default function AdminOrdersPage() {
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center justify-between mb-6 gap-4">
           <div>
-            <h1 className="text-3xl font-bold">Manage Orders</h1>
+            <h1 className="text-xl md:text-2xl font-bold">Manage Orders</h1>
             <p className="text-sm text-gray-600 mt-1">View, filter and update order statuses</p>
           </div>
 
@@ -255,7 +260,7 @@ export default function AdminOrdersPage() {
                   <button
                     key={t}
                     onClick={() => setActiveTab(t)}
-                    className={`px-3 py-1 rounded-full text-sm font-medium ${
+                    className={`px-2 cursor-pointer md:px-3 py-1 rounded-xl text-sm font-medium ${
                       activeTab === t ? "bg-black text-white" : "bg-white text-black hover:bg-gray-100"
                     }`}
                   >
@@ -331,7 +336,7 @@ export default function AdminOrdersPage() {
                       {order.deliveryDate && (
                         <p className="text-sm text-gray-600 mt-1 flex items-center gap-2">
                           <CalendarClock size={14} />
-                          Delivery: {new Date(order.deliveryDate).toLocaleDateString()}
+                          Expected Delivery: {new Date(order.deliveryDate).toLocaleDateString()}
                         </p>
                       )}
                     </div>
@@ -373,17 +378,17 @@ export default function AdminOrdersPage() {
                           <option>Completed</option>
                           <option>Cancelled</option>
                         </select>
-                        <button onClick={() => applyStatusChange(order._id)} className="px-3 py-2 bg-green-600 text-white rounded">
+                        <button onClick={() => applyStatusChange(order._id)} className="px-3 cursor-pointer py-2 bg-green-600 text-white rounded">
                           <Check size={16} />
                         </button>
-                        <button onClick={() => setEditingStatusFor(null)} className="px-3 py-2 bg-gray-200 rounded">
+                        <button onClick={() => setEditingStatusFor(null)} className="px-3 py-2 cursor-pointer bg-gray-200 rounded">
                           <X size={16} />
                         </button>
                       </>
                     ) : (
                       <>
-                        <button onClick={() => openEdit(order)} className="flex-1 px-3 py-2 border rounded bg-white hover:bg-gray-50">
-                          <Pencil size={16} />
+                        <button onClick={() => openEdit(order)} className="flex-1 px-3 py-2 border rounded bg-green-500 cursor-pointer hover:bg-green-300">
+                          Edit Status
                         </button>
                       </>
                     )}
@@ -402,8 +407,12 @@ export default function AdminOrdersPage() {
                 <p className="text-sm text-gray-600">Provide a message to send to the customer (optional).</p>
                 <textarea value={cancelMsg} onChange={(e) => setCancelMsg(e.target.value)} className="w-full border rounded p-3 h-28" placeholder="Reason for cancellation (optional)"></textarea>
                 <div className="flex justify-end gap-3">
-                  <button onClick={() => { setShowCancelModalFor(null); setCancelMsg(""); }} className="px-4 py-2 border rounded">Close</button>
-                  <button onClick={() => submitCancel(showCancelModalFor)} className="px-4 py-2 bg-red-600 text-white rounded">Confirm Cancel</button>
+                  <button onClick={() => { setShowCancelModalFor(null); setCancelMsg(""); }} className="px-4 py-2 border cursor-pointer rounded">Close</button>
+                  {!deleting ? (
+                    <button onClick={() => submitCancel(showCancelModalFor)} className="px-4 py-2 bg-red-600 text-white cursor-pointer rounded">Confirm Cancel</button>
+                  ) : (
+                    <button className="px-4 py-2 bg-red-300 text-white cursor-not-allowed rounded">Canceling...</button>
+                  )}
                 </div>
               </div>
             </motion.div>
@@ -443,8 +452,8 @@ export default function AdminOrdersPage() {
                 </div>
 
                 <div className="flex justify-end gap-3">
-                  <button onClick={() => { setShowOtpModalFor(null); setOtpInputs(["", "", "", "", "", ""]); }} className="px-4 py-2 border rounded">Cancel</button>
-                  <button onClick={() => submitOtpVerify(showOtpModalFor)} className="px-4 py-2 bg-blue-600 text-white rounded">Verify OTP</button>
+                  <button onClick={() => { setShowOtpModalFor(null); setOtpInputs(["", "", "", "", "", ""]); }} className="px-4 py-2 border cursor-pointer rounded">Cancel</button>
+                  <button onClick={() => submitOtpVerify(showOtpModalFor)} className="px-4 py-2 cursor-pointer bg-blue-600 text-white rounded">Verify OTP</button>
                 </div>
               </div>
             </motion.div>

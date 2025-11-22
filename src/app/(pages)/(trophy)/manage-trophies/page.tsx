@@ -276,7 +276,7 @@ export default function ManageTrophiesPage() {
             <button
               onClick={() => fetchTrophies(true)}
               title="Refresh"
-              className="p-2 rounded-lg bg-gray-100 hover:bg-gray-200"
+              className="p-2 rounded-lg cursor-pointer bg-gray-100 hover:bg-gray-200"
             >
               <FiRefreshCw />
             </button>
@@ -284,7 +284,7 @@ export default function ManageTrophiesPage() {
             <motion.button
               whileHover={{ scale: 1.05 }}
               onClick={() => router.push("/add-trophy")}
-              className="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg shadow"
+              className="flex items-center cursor-pointer gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg shadow"
             >
               <FiPlus /> Add
             </motion.button>
@@ -293,11 +293,11 @@ export default function ManageTrophiesPage() {
 
         {/* controls */}
         <div className="flex flex-col md:flex-row items-center gap-3 md:gap-6 mb-6">
-          <select value={filterCategory} onChange={(e) => { setFilterCategory(e.target.value); setPage(1); }} className="px-3 py-2 border rounded-lg">
+          <select value={filterCategory} onChange={(e) => { setFilterCategory(e.target.value); setPage(1); }} className="px-3 cursor-pointer py-2 border rounded-lg">
             {categories.map((c) => <option key={c} value={c}>{c}</option>)}
           </select>
 
-          <select value={sortBy} onChange={(e) => setSortBy(e.target.value as SortOption)} className="px-3 py-2 border rounded-lg">
+          <select value={sortBy} onChange={(e) => setSortBy(e.target.value as SortOption)} className="px-3 cursor-pointer py-2 border rounded-lg">
             <option value="priority">Priority (1 → 7)</option>
             <option value="newest">Newest</option>
             <option value="oldest">Oldest</option>
@@ -307,7 +307,7 @@ export default function ManageTrophiesPage() {
             <option value="nameDesc">Name Z → A</option>
           </select>
 
-          <button onClick={clearFilters} className="px-3 py-2 border rounded-lg bg-white hover:bg-gray-50">Clear</button>
+          <button onClick={clearFilters} className="px-3 py-2 border rounded-lg cursor-pointer bg-white hover:bg-gray-50">Clear</button>
         </div>
 
         {/* grid */}
@@ -353,14 +353,14 @@ export default function ManageTrophiesPage() {
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => openEditModal(trophy)}
-                        className="p-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md"
+                        className="p-2 bg-blue-500 cursor-pointer hover:bg-blue-600 text-white rounded-md"
                         title="Edit"
                       >
                         <FiEdit />
                       </button>
                       <button
                         onClick={() => openDeleteModal(trophy)}
-                        className="p-2 bg-red-500 hover:bg-red-600 text-white rounded-md"
+                        className="p-2 bg-red-500 cursor-pointer hover:bg-red-600 text-white rounded-md"
                         title="Delete"
                       >
                         <FiTrash2 />
@@ -377,9 +377,9 @@ export default function ManageTrophiesPage() {
         <div className="flex items-center justify-between mt-6">
           <div className="text-sm text-gray-600">Showing {(page - 1) * PAGE_SIZE + 1} - {Math.min(page * PAGE_SIZE, filtered.length)} of {filtered.length}</div>
           <div className="flex items-center gap-2">
-            <button disabled={page <= 1} onClick={() => setPage((p) => Math.max(1, p - 1))} className="px-3 py-1 border rounded disabled:opacity-50">Prev</button>
+            <button disabled={page <= 1} onClick={() => setPage((p) => Math.max(1, p - 1))} className="px-3 py-1 border cursor-pointer rounded disabled:opacity-50">Prev</button>
             <div className="px-3 py-1 border rounded bg-white">Page {page} / {totalPages}</div>
-            <button disabled={page >= totalPages} onClick={() => setPage((p) => Math.min(totalPages, p + 1))} className="px-3 py-1 border rounded disabled:opacity-50">Next</button>
+            <button disabled={page >= totalPages} onClick={() => setPage((p) => Math.min(totalPages, p + 1))} className="px-3 cursor-pointer py-1 border rounded disabled:opacity-50">Next</button>
           </div>
         </div>
 
@@ -390,8 +390,8 @@ export default function ManageTrophiesPage() {
               <h3 className="text-lg font-semibold mb-2">Delete trophy?</h3>
               <p className="text-sm text-gray-600 mb-4">Are you sure you want to delete <strong>{deleteTarget.name}</strong>? This action cannot be undone.</p>
               <div className="flex justify-end gap-3">
-                <button onClick={() => { setModalOpen(null); setDeleteTarget(null); }} className="px-4 py-2 bg-gray-200 rounded">Cancel</button>
-                <button disabled={processing} onClick={handleDelete} className="px-4 py-2 bg-red-600 text-white rounded">{processing ? "Deleting..." : "Delete"}</button>
+                <button onClick={() => { setModalOpen(null); setDeleteTarget(null); }} className="px-4 py-2 cursor-pointer bg-gray-200 rounded">Cancel</button>
+                <button disabled={processing} onClick={handleDelete} className="px-4 py-2 bg-red-600 text-white cursor-pointer rounded">{processing ? "Deleting..." : "Delete"}</button>
               </div>
             </div>
           </div>
@@ -448,8 +448,8 @@ export default function ManageTrophiesPage() {
               </div>
 
               <div className="flex justify-end gap-3 mt-6">
-                <button onClick={() => setModalOpen(null)} className="px-4 py-2 bg-gray-200 rounded">Cancel</button>
-                <button disabled={processing} onClick={handleEditSubmit} className="px-4 py-2 bg-blue-600 text-white rounded">{processing ? "Saving..." : "Save Changes"}</button>
+                <button onClick={() => setModalOpen(null)} className="px-4 py-2 bg-gray-200 cursor-pointer rounded">Cancel</button>
+                <button disabled={processing} onClick={handleEditSubmit} className="px-4 py-2 bg-blue-600 cursor-pointer text-white rounded">{processing ? "Saving..." : "Save Changes"}</button>
               </div>
             </motion.div>
           </div>

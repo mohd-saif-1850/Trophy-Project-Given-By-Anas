@@ -26,6 +26,7 @@ export default function FeedbackPage() {
   const [comment, setComment] = useState("");
   const [loading, setLoading] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [deleting,setDeleting] = useState(false)
 
   useEffect(() => {
     if (session?.user?._id) fetchFeedbacks();
@@ -71,20 +72,25 @@ export default function FeedbackPage() {
 
   const deleteFeedback = async () => {
     if (!deleteId) return;
+    setDeleting(true)
 
     try {
       const res = await axios.delete(`/api/delete-feedback?id=${deleteId}`);
 
       if (res.data.success) {
-        toast.success("Feedback deleted");
+        toast.success("Feedback Deleted");
         setFeedbacks((prev) => prev.filter((f) => f._id !== deleteId));
+        setDeleting(false)
       } else {
         toast.error(res.data.message);
+        setDeleting(false)
       }
     } catch (err: any) {
       toast.error(err?.response?.data?.message || "Error deleting feedback");
+      setDeleting(false)
     } finally {
       setDeleteId(null);
+      setDeleting(false)
     }
   };
 
@@ -142,7 +148,7 @@ export default function FeedbackPage() {
             <button
               disabled={loading}
               onClick={submitFeedback}
-              className={`mt-5 w-full py-3 rounded-xl text-white text-lg font-semibold shadow-lg transition ${
+              className={`mt-5 w-full cursor-pointer py-3 rounded-xl text-white text-lg font-semibold shadow-lg transition ${
                 loading
                   ? "bg-blue-300 cursor-not-allowed"
                   : "bg-blue-600 hover:bg-blue-700 active:scale-95"
@@ -182,7 +188,7 @@ export default function FeedbackPage() {
 
                   <button
                     onClick={() => setDeleteId(f._id)}
-                    className="p-2 rounded-full hover:bg-red-100 transition"
+                    className="p-2 rounded-full cursor-pointer hover:bg-red-100 transition"
                   >
                     <Trash2 className="w-5 h-5 text-red-600" />
                   </button>
@@ -231,23 +237,32 @@ export default function FeedbackPage() {
             <div className="flex justify-between gap-4">
               <button
                 onClick={() => setDeleteId(null)}
-                className="w-1/2 py-2 rounded-xl bg-gray-200 hover:bg-gray-300 transition"
+                className="w-1/2 cursor-pointer py-2 rounded-xl bg-gray-200 hover:bg-gray-300 transition"
               >
                 Cancel
               </button>
-              <button
-                onClick={deleteFeedback}
-                className="w-1/2 py-2 rounded-xl bg-red-600 text-white hover:bg-red-700 transition"
-              >
-                Delete
-              </button>
+              {!deleting ? (
+                <button
+                  onClick={deleteFeedback}
+                  className="w-1/2 py-2 rounded-xl cursor-pointer bg-red-600 text-white hover:bg-red-700 transition"
+                >
+                  Delete
+                </button>
+              ) : (
+                <button
+                  onClick={deleteFeedback}
+                  className="w-1/2 py-2 rounded-xl cursor-not-allowed bg-red-400 text-white transition" disabled
+                >
+                  Deleting...
+                </button>
+              )}
             </div>
 
             <button
               onClick={() => setDeleteId(null)}
               className="absolute top-4 right-4"
             >
-              <X className="w-5 h-5 text-gray-600" />
+              <X className="w-5 cursor-pointer h-5 text-gray-600" />
             </button>
           </div>
         </div>

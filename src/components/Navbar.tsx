@@ -17,6 +17,7 @@ import {
   Search,
   Shield,
   User2,
+  OctagonIcon,
   UserCircle,
   ShoppingBag
 } from "lucide-react";
@@ -123,8 +124,10 @@ export default function Navbar() {
     ];
   } else if (isUser) {
     mobileLinks = [
+      { href: "/", label: "Home", icon: Home },
+      { href: "/cart", label: "Cart", icon: ShoppingCart },
       { href: "/profile", label: "Profile", icon: User },
-      { href: "/my-orders", label: "My Orders", icon: Info },
+      { href: "/my-orders", label: "My Orders", icon: ShoppingBag },
       { href: "/about", label: "About Us", icon: Info },
       { href: "/contact", label: "Contact Us", icon: Phone },
       { href: "/report", label: "Report a Bug", icon: Bug },
@@ -132,7 +135,8 @@ export default function Navbar() {
   } else if (isAdmin) {
     mobileLinks = [
       { href: "/", label: "Home", icon: Home },
-      { href: "/all-orders", label: "All Orders", icon: ShoppingBag },
+      { href: "/get-all-orders", label: "All Orders", icon: ShoppingBag },
+      { href: "/manage-trophies", label: "Manage Trophies", icon: OctagonIcon },
       { href: "/all-reports", label: "All Reports", icon: Bug },
     ];
   }
@@ -165,7 +169,7 @@ export default function Navbar() {
             />
             <button
               type="submit"
-              className="text-gray-600 hover:text-blue-600 p-1"
+              className="text-gray-600 cursor-pointer hover:text-blue-600 p-1"
             >
               <Search size={18} />
             </button>

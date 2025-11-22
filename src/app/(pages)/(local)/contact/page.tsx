@@ -147,7 +147,7 @@ export default function ContactPage() {
             <button
               disabled={loading}
               onClick={handleSubmit}
-              className={`w-full py-3 rounded-xl text-white text-lg font-semibold flex items-center justify-center gap-2 transition ${
+              className={`w-full py-3 cursor-pointer rounded-xl text-white text-lg font-semibold flex items-center justify-center gap-2 transition ${
                 loading
                   ? "bg-blue-300 cursor-not-allowed"
                   : "bg-blue-600 hover:bg-blue-700 active:scale-95"

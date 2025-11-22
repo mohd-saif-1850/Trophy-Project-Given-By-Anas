@@ -123,7 +123,7 @@ export default function VerifyOtpPage() {
             className={`w-full py-2.5 rounded-lg text-white font-medium transition ${
               loading
                 ? "bg-blue-400 cursor-not-allowed"
-                : "bg-blue-600 hover:bg-blue-700"
+                : "bg-blue-600 cursor-pointer hover:bg-blue-700"
             }`}
           >
             {loading ? "Verifying..." : "Verify"}
@@ -138,7 +138,7 @@ export default function VerifyOtpPage() {
             className={`font-medium transition ${
               timer > 0 || resending
                 ? "text-gray-400 cursor-not-allowed"
-                : "text-blue-600 hover:text-blue-700"
+                : "text-blue-600 cursor-pointer hover:text-blue-700"
             }`}
           >
             {timer > 0 ? `Resend in ${timer}s` : "Resend OTP"}

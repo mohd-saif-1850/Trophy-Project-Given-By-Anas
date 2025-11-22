@@ -102,7 +102,7 @@ export default function VerifyForgotOtpPage() {
             className={`w-full py-3 rounded-xl text-white font-semibold tracking-wide transition-all ${
               loading
                 ? "bg-blue-400 cursor-not-allowed"
-                : "bg-blue-600 hover:bg-blue-700 active:scale-[0.98]"
+                : "bg-blue-600 cursor-pointer hover:bg-blue-700 active:scale-[0.98]"
             }`}
           >
             {loading ? "Verifying..." : "Verify OTP"}

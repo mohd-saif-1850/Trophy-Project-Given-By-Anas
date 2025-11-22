@@ -35,10 +35,8 @@ export default function CartPage() {
     country: "India",
   });
 
-  // Hydration
   useEffect(() => setHydrated(true), []);
 
-  // Load cart
   useEffect(() => {
     if (!hydrated) return;
 
@@ -53,12 +51,10 @@ export default function CartPage() {
     }
   }, [hydrated]);
 
-  // User details
   useEffect(() => {
     if (session?.user) setName(session.user.name || "");
   }, [session]);
 
-  // Save cart
   useEffect(() => {
     if (hydrated) localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart, hydrated]);
@@ -93,7 +89,10 @@ export default function CartPage() {
   };
 
   const handleCheckout = async () => {
-    if (!session?.user) return router.push("/login");
+    if (!session?.user){
+      toast.error("Please Login First !")
+      return router.push("/sign-in")
+    }
 
     if (!name.trim()) return toast.error("Enter name");
     const required = ["street", "city", "state", "postalCode"];
@@ -169,7 +168,7 @@ export default function CartPage() {
                       <div className="mt-2 flex items-center gap-3 bg-gray-100 px-3 rounded-lg py-1">
                         <button
                           onClick={() => handleQuantity(item.trophyId, -1)}
-                          className="hover:bg-gray-200 rounded p-1"
+                          className="hover:bg-gray-200 cursor-pointer rounded p-1"
                         >
                           <Minus size={14} />
                         </button>
@@ -178,7 +177,7 @@ export default function CartPage() {
 
                         <button
                           onClick={() => handleQuantity(item.trophyId, 1)}
-                          className="hover:bg-gray-200 rounded p-1"
+                          className="hover:bg-gray-200 cursor-pointer rounded p-1"
                         >
                           <Plus size={14} />
                         </button>
@@ -188,7 +187,7 @@ export default function CartPage() {
 
                   <button
                     onClick={() => handleRemove(item.trophyId)}
-                    className="text-red-500 hover:text-red-700"
+                    className="text-red-500 cursor-pointer hover:text-red-700"
                   >
                     <Trash2 />
                   </button>
@@ -272,7 +271,7 @@ export default function CartPage() {
             <button
               onClick={handleCheckout}
               disabled={loading}
-              className="w-full bg-blue-600 text-white py-3 rounded-lg text-lg mt-5 hover:bg-blue-700 transition flex justify-center items-center"
+              className="w-full cursor-pointer bg-blue-600 text-white py-3 rounded-lg text-lg mt-5 hover:bg-blue-700 transition flex justify-center items-center"
             >
               {loading && <Loader2 className="animate-spin mr-2" size={20} />}
               {loading ? "Placing Order..." : "Place Order"}

@@ -94,7 +94,7 @@ export default function SignInPage() {
           <button
             type="submit"
             disabled={loading}
-            className={`w-full py-2.5 rounded-lg text-white font-medium transition ${
+            className={`w-full py-2.5 cursor-pointer rounded-lg text-white font-medium transition ${
               loading
                 ? "bg-blue-400 cursor-not-allowed"
                 : "bg-blue-600 hover:bg-blue-700"

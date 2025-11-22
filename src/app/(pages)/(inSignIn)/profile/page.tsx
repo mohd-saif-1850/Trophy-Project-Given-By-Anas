@@ -88,7 +88,7 @@ export default function UserProfilePage() {
         {!editing && (
           <button
             onClick={() => setEditing(true)}
-            className="flex items-center gap-2 bg-blue-600 text-white px-7 py-3 rounded-xl font-semibold hover:bg-blue-700 transition-all active:scale-[0.97] w-fit mx-auto mb-12"
+            className="flex items-center cursor-pointer gap-2 bg-blue-600 text-white px-7 py-3 rounded-xl font-semibold hover:bg-blue-700 transition-all active:scale-[0.97] w-fit mx-auto mb-12"
           >
             <Edit3 className="w-5 h-5" /> Edit Profile
           </button>
@@ -125,7 +125,7 @@ export default function UserProfilePage() {
             <div className="flex items-center gap-4">
               <button
                 disabled={updating}
-                className={`px-6 py-3 rounded-xl text-white font-semibold transition-all flex items-center gap-2 ${
+                className={`px-6 py-3 rounded-xl cursor-pointer text-white font-semibold transition-all flex items-center gap-2 ${
                   updating ? "bg-blue-400" : "bg-blue-600 hover:bg-blue-700"
                 }`}
                 type="submit"
@@ -136,7 +136,7 @@ export default function UserProfilePage() {
               <button
                 type="button"
                 onClick={() => setEditing(false)}
-                className="px-6 py-3 rounded-xl text-gray-700 font-semibold border border-gray-300 hover:bg-gray-100 transition-all"
+                className="px-6 py-3 cursor-pointer rounded-xl text-gray-700 font-semibold border border-gray-300 hover:bg-gray-100 transition-all"
               >
                 Cancel
               </button>

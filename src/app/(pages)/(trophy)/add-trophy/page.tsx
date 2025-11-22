@@ -308,7 +308,7 @@ export default function AddTrophyPage() {
             className={`w-full py-2.5 rounded-lg text-white font-medium transition ${
               loading
                 ? "bg-indigo-400 cursor-not-allowed"
-                : "bg-indigo-600 hover:bg-indigo-700"
+                : "bg-indigo-600 cursor-pointer hover:bg-indigo-700"
             }`}
           >
             {loading ? "Adding..." : "Add Trophy"}

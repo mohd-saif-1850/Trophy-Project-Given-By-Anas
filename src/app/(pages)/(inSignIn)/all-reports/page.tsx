@@ -105,7 +105,7 @@ export default function AdminFeedbackPage() {
                       f.status === "approved" ? "pending" : "approved"
                     )
                   }
-                  className="px-4 py-1 rounded-xl bg-blue-600 text-white hover:bg-blue-700"
+                  className="px-4 py-1 cursor-pointer rounded-xl bg-blue-600 text-white hover:bg-blue-700"
                 >
                   {f.status === "approved" ? "Mark Pending" : "Approve"}
                 </button>

@@ -44,6 +44,7 @@ export default function MyOrdersPage() {
   const [loading, setLoading] = useState(false);
   const [confirmCancelId, setConfirmCancelId] = useState<string | null>(null);
   const [expandedOrders, setExpandedOrders] = useState<string[]>([]);
+  const [deleting, setDeleting] = useState(false)
 
   const toggleExpand = (orderId: string) => {
     setExpandedOrders((prev) =>
@@ -71,12 +72,14 @@ export default function MyOrdersPage() {
 
   const cancelOrder = async (orderId: string) => {
     try {
+      setDeleting(true)
       const res = await axios.delete(`/api/delete-order?id=${orderId}`);
 
       if (res.data.success) {
         toast.success("Order cancelled");
         fetchOrders();
         setConfirmCancelId(null);
+        setDeleting(false)
       } else {
         toast.error(res.data.message || "Failed to cancel order");
       }
@@ -153,7 +156,7 @@ export default function MyOrdersPage() {
 
                   <div className="flex gap-3">
                     <button
-                      className="flex items-center gap-1 px-3 py-1 border rounded hover:bg-gray-100"
+                      className="flex cursor-pointer items-center gap-1 px-3 py-1 border rounded hover:bg-gray-100"
                       onClick={() => toggleExpand(order._id)}
                     >
                       <Eye size={16} />
@@ -162,7 +165,7 @@ export default function MyOrdersPage() {
 
                     {order.status.toLowerCase() === "pending" && (
                       <button
-                        className="flex items-center gap-1 px-3 py-1 border rounded hover:bg-red-100 text-red-600"
+                        className="flex cursor-pointer items-center gap-1 px-3 py-1 border rounded hover:bg-red-100 text-red-600"
                         onClick={() => setConfirmCancelId(order._id)}
                       >
                         <Trash2 size={16} /> Cancel
@@ -175,7 +178,7 @@ export default function MyOrdersPage() {
                   <div className="mt-6 border-t pt-4 space-y-4">
                     <div className="flex justify-between">
                       <h3 className="font-bold text-xl">Order Details</h3>
-                      <button className="text-gray-500 hover:text-black" onClick={() => toggleExpand(order._id)}>
+                      <button className="text-gray-500 cursor-pointer hover:text-black" onClick={() => toggleExpand(order._id)}>
                         <X size={22} />
                       </button>
                     </div>
@@ -214,16 +217,24 @@ export default function MyOrdersPage() {
 
       {confirmCancelId && (
         <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-xl shadow-lg space-y-4 max-w-sm w-full">
+          <div className="bg-white cursor-pointer p-6 rounded-xl shadow-lg space-y-4 max-w-sm w-full">
             <p>Are you sure you want to cancel this order?</p>
             <div className="flex justify-end gap-4">
-              <button className="px-4 py-2 rounded border" onClick={() => setConfirmCancelId(null)}>
+              {!deleting ? (<button className="px-4 cursor-pointer py-2 rounded border" onClick={() => setConfirmCancelId(null)}>
                 No
-              </button>
+              </button>) : (
+                <p></p>
+              )}
 
-              <button className="px-4 py-2 rounded bg-red-600 text-white" onClick={() => cancelOrder(confirmCancelId)}>
-                Yes, Cancel
-              </button>
+              {deleting ? (
+                <button className="px-4 cursor-not-allowed py-2 rounded bg-green-600 text-white" onClick={() => cancelOrder(confirmCancelId)} disabled>
+                  Canceling...
+                </button>
+              ) : (
+                <button className="px-4 py-2 cursor-pointer rounded bg-red-600 text-white" onClick={() => cancelOrder(confirmCancelId)}>
+                  Yes, Cancel
+                </button>
+              )}
             </div>
           </div>
         </div>

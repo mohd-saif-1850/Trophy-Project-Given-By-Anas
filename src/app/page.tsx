@@ -83,7 +83,6 @@ export default function HomePage() {
     categorySort[viewingCategory || ""] || "newest"
   ).slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
-  // Group by categories for homepage
   const getCategoriesWithTrophies = (list: Trophy[], limit = 12) => {
     const map: Record<string, Trophy[]> = {};
     list.forEach((t) => {
@@ -114,7 +113,6 @@ export default function HomePage() {
     <div className="min-h-screen bg-linear-to-b from-gray-50 via-white to-gray-100 text-gray-900 px-3 sm:px-6 py-10">
       <Toaster position="top-right" />
       <div className="max-w-7xl mx-auto space-y-10">
-        {/* Title */}
         <motion.h1
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -124,7 +122,6 @@ export default function HomePage() {
           AH Handicraft <span className="text-blue-600">Collections</span>
         </motion.h1>
 
-        {/* Carousel */}
         <div className="relative w-full h-[200px] sm:h-[300px] overflow-hidden rounded-2xl shadow-lg bg-gray-200">
           <AnimatePresence mode="wait">
             {trophies.length > 0 && (
@@ -135,7 +132,7 @@ export default function HomePage() {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.6 }}
                 onClick={() => handleTrophyClick(trophies[carouselIndex]._id)}
-                className="relative w-full h-full cursor-pointer group"
+                className="relative cursor-pointer w-full h-full group"
               >
                 <Image
                   src={trophies[carouselIndex].image || "/placeholder.png"}
@@ -160,13 +157,13 @@ export default function HomePage() {
           </AnimatePresence>
           <button
             onClick={prevCarousel}
-            className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 shadow-lg"
+            className="absolute left-2 cursor-pointer top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 shadow-lg"
           >
             <ChevronLeft className="w-5 h-5 text-gray-700" />
           </button>
           <button
             onClick={nextCarousel}
-            className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 shadow-lg"
+            className="absolute right-2 cursor-pointer top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 shadow-lg"
           >
             <ChevronRight className="w-5 h-5 text-gray-700" />
           </button>
@@ -180,7 +177,7 @@ export default function HomePage() {
                 <h2 className="text-xl font-semibold">{cat}</h2>
                 <button
                   onClick={() => { setViewingCategory(cat); setCurrentPage(1); }}
-                  className="text-blue-600 hover:underline"
+                  className="text-blue-600 cursor-pointer hover:underline"
                 >
                   View All
                 </button>
@@ -224,7 +221,7 @@ const TrophyCard = ({ trophy, onClick, onAddToCart }: { trophy: Trophy; onClick?
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
-    className="bg-white shadow-sm hover:shadow-md border border-gray-100 rounded-xl overflow-hidden cursor-pointer hover:-translate-y-1 transition-all duration-300 group"
+    className="bg-white shadow-sm hover:shadow-md border border-gray-100 rounded-xl overflow-hidden hover:-translate-y-1 transition-all duration-300 group"
     onClick={onClick}
   >
     <div className="relative h-28 sm:h-32">
@@ -232,7 +229,7 @@ const TrophyCard = ({ trophy, onClick, onAddToCart }: { trophy: Trophy; onClick?
         src={trophy.image || "/placeholder.png"}
         alt={trophy.name}
         fill
-        className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
+        className="object-cover cursor-pointer object-center group-hover:scale-105 transition-transform duration-500"
       />
       <div className="absolute top-2 right-2 bg-white/80 rounded-full p-1">
         <Star className="w-4 h-4 text-yellow-500" />
@@ -247,7 +244,7 @@ const TrophyCard = ({ trophy, onClick, onAddToCart }: { trophy: Trophy; onClick?
         {onAddToCart && (
           <button
             onClick={(e) => { e.stopPropagation(); onAddToCart(); }}
-            className="p-1.5 sm:p-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-white"
+            className="p-1.5 cursor-pointer sm:p-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-white"
           >
             <ShoppingCart className="w-4 h-4" />
           </button>
@@ -284,13 +281,12 @@ const CategoryView = ({
         <h2 className="text-xl font-semibold">{category}</h2>
         <button
           onClick={() => setViewingCategory(null)}
-          className="text-blue-600 hover:underline"
+          className="text-blue-600 cursor-pointer hover:underline"
         >
           Back
         </button>
       </div>
 
-      {/* Sorting using Select */}
       <div className="mb-4">
         <select
           className="px-3 py-2 border rounded-md bg-white text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -318,13 +314,12 @@ const CategoryView = ({
         ))}
       </div>
 
-      {/* Pagination */}
       {totalItems > itemsPerPage && (
         <div className="flex justify-center gap-4 mt-4">
           <button
             disabled={currentPage === 1}
             onClick={() => setCurrentPage((p: number) => p - 1)}
-            className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50"
+            className="px-4 py-2 cursor-pointer bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50"
           >
             Previous
           </button>

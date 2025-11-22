@@ -1,36 +1,29 @@
 import { NextResponse } from "next/server";
 import dbConnect from "@/lib/dbConnect";
-import { OrderModel } from "@/model/Order.model";
+import { TrophyModel } from "@/model/Trophy.model"; // ← IMPORTANT
 
 export async function DELETE(request: Request) {
   try {
     await dbConnect();
+
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
-    const msg = searchParams.get("msg") || undefined;
 
-    if (!id) throw new Error("Order ID is required!");
+    if (!id) throw new Error("Trophy ID is required!");
 
-    const order = await OrderModel.findById(id);
-    if (!order) throw new Error("Order not found!");
+    const trophy = await TrophyModel.findById(id);
+    if (!trophy) throw new Error("Trophy not found!");
 
-    if (order.status.toLowerCase() !== "pending") {
-      throw new Error("Only pending orders can be cancelled!");
-    }
-
-    order.status = "Cancelled";
-
-    if (msg) order.msg = msg;
-
-    await order.save();
+    await TrophyModel.findByIdAndDelete(id);
 
     return NextResponse.json(
-      { success: true, message: "Order cancelled successfully!" },
+      { success: true, message: "Trophy deleted successfully!" },
       { status: 200 }
     );
-  } catch (err: any) {
+
+  } catch (error: any) {
     return NextResponse.json(
-      { success: false, message: err.message || "Failed to cancel order!" },
+      { success: false, message: error.message || "Failed to delete trophy!" },
       { status: 500 }
     );
   }
