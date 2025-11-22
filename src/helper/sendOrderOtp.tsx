@@ -14,7 +14,7 @@ export const sendOrderOtpEmail = async (
     );
 
     await resend.emails.send({
-      from: "A.H Handicraft <onboarding@resend.dev>",
+      from: "A.H Handicraft <support@ahhandicraft.store>",
       to: email,
       subject: `Order Verification OTP — #${orderId}`,
       html,

@@ -13,7 +13,7 @@ export const sendForgotPasswordEmail = async (
     );
 
     await resend.emails.send({
-      from: "A.H Handicraft <onboarding@resend.dev>",
+      from: "A.H Handicraft <support@ahhandicraft.store>",
       to: email,
       subject: "Reset Your Password - OTP Verification",
       html: emailHtml,

@@ -13,7 +13,7 @@ export const sendVerificationEmail = async (
     );
 
     await resend.emails.send({
-      from: "A.H Handicraft <onboarding@resend.dev>",
+      from: "A.H Handicraft <support@ahhandicraft.store>",
       to: email,
       subject: "Verify Your Email Address",
       html,
