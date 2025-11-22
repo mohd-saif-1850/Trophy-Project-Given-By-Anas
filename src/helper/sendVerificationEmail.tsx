@@ -1,6 +1,6 @@
-import nodemailer from "nodemailer";
-import { VerifyOtpEmail } from "@/emails/layoutEmail";
+import { resend } from "@/lib/resend";
 import { render } from "@react-email/render";
+import { VerifyOtpEmail } from "@/emails/layoutEmail";
 
 export const sendVerificationEmail = async (
   email: string,
@@ -8,30 +8,19 @@ export const sendVerificationEmail = async (
   otp: string
 ) => {
   try {
-    // Render email template
-    const emailHtml = await render(
+    const html = await render(
       <VerifyOtpEmail username={username} otp={otp} />
     );
 
-    // Create nodemailer transporter
-    const transporter = nodemailer.createTransport({
-      service: "gmail", // or "smtp", depends on your provider
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
-
-    // Send email
-    await transporter.sendMail({
-      from: `"A.H Handicraft" <${process.env.EMAIL_USER}>`,
+    await resend.emails.send({
+      from: "A.H Handicraft <onboarding@resend.dev>",
       to: email,
       subject: "Verify Your Email Address",
-      html: emailHtml,
+      html,
     });
 
+    return { success: true };
   } catch (error) {
-    console.error(error);
     throw new Error("Failed to Send Verification Email!");
   }
 };

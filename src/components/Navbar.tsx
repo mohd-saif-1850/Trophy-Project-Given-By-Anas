@@ -133,10 +133,7 @@ export default function Navbar() {
     mobileLinks = [
       { href: "/", label: "Home", icon: Home },
       { href: "/all-orders", label: "All Orders", icon: ShoppingBag },
-      { href: "/admin", label: "Admin Panel", icon: Shield },
-      { href: "/about", label: "About Us", icon: Info },
-      { href: "/contact", label: "Contact Us", icon: Phone },
-      { href: "/report", label: "Report a Bug", icon: Bug },
+      { href: "/all-reports", label: "All Reports", icon: Bug },
     ];
   }
 

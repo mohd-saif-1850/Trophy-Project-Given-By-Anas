@@ -1,6 +1,6 @@
-import nodemailer from "nodemailer";
-import { OrderConfirmationEmail } from "@/emails/OrderConfirmationEmail";
+import { resend } from "@/lib/resend";
 import { render } from "@react-email/render";
+import { OrderConfirmationEmail } from "@/emails/OrderConfirmationEmail";
 
 export const sendOrderConfirmationEmail = async (
   email: string,
@@ -8,27 +8,19 @@ export const sendOrderConfirmationEmail = async (
   order: any
 ) => {
   try {
-    const emailHtml = await render(
+    const html = await render(
       <OrderConfirmationEmail username={username} order={order} />
     );
 
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
-
-    await transporter.sendMail({
-      from: `"A.H Handicraft" <${process.env.EMAIL_USER}>`,
+    await resend.emails.send({
+      from: "A.H Handicraft <onboarding@resend.dev>",
       to: email,
       subject: "Your Order Confirmation",
-      html: emailHtml,
+      html,
     });
 
-  } catch (err) {
-    console.error("Failed to send order confirmation email:", err);
-    throw new Error("Email send failed");
+    return { success: true };
+  } catch (error) {
+    throw new Error("Failed to send order confirmation email!");
   }
 };

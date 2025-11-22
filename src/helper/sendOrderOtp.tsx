@@ -1,6 +1,6 @@
-import nodemailer from "nodemailer";
-import { OrderOtpEmail } from "@/emails/OrderOtpEmail";
+import { resend } from "@/lib/resend";
 import { render } from "@react-email/render";
+import { OrderOtpEmail } from "@/emails/OrderOtpEmail";
 
 export const sendOrderOtpEmail = async (
   email: string,
@@ -9,27 +9,19 @@ export const sendOrderOtpEmail = async (
   orderId: string
 ) => {
   try {
-    const emailHtml = await render(
+    const html = await render(
       <OrderOtpEmail username={username} otp={otp} orderId={orderId} />
     );
 
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
-
-    await transporter.sendMail({
-      from: `"A.H Handicraft" <${process.env.EMAIL_USER}>`,
+    await resend.emails.send({
+      from: "A.H Handicraft <onboarding@resend.dev>",
       to: email,
       subject: `Order Verification OTP — #${orderId}`,
-      html: emailHtml,
+      html,
     });
 
+    return { success: true };
   } catch (error) {
-    console.error(error);
     throw new Error("Failed to send OTP email for Order!");
   }
 };
