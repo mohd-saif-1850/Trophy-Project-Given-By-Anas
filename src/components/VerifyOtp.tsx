@@ -107,7 +107,7 @@ export default function VerifyOtpPage() {
                   inputRefs.current[index] = el
                 }
                 }
-                type="digit"
+                type="number"
                 maxLength={1}
                 value={digit}
                 onChange={(e) => handleChange(e.target.value, index)}
