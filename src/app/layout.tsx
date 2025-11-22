@@ -4,6 +4,7 @@ import "./globals.css";
 import SessionWrapper from "@/helper/SessionWrapper";
 import Navbar from "@/components/Navbar";
 import { Toaster } from "react-hot-toast";
+import { Analytics } from "@vercel/analytics/react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,6 +36,7 @@ export default function RootLayout({
           <main className="pt-16">{children}</main>
         </SessionWrapper>
         <Toaster position="top-right" toastOptions={{ duration: 2500 }} />
+        <Analytics />
       </body>
     </html>
   );
