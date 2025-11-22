@@ -122,10 +122,10 @@ export default function UserProfilePage() {
               </div>
             </div>
 
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
               <button
                 disabled={updating}
-                className={`px-6 py-3 rounded-xl cursor-pointer text-white font-semibold transition-all flex items-center gap-2 ${
+                className={`px-4 py-2 rounded-xl cursor-pointer text-white font-semibold transition-all flex items-center gap-2 ${
                   updating ? "bg-blue-400" : "bg-blue-600 hover:bg-blue-700"
                 }`}
                 type="submit"
@@ -136,7 +136,7 @@ export default function UserProfilePage() {
               <button
                 type="button"
                 onClick={() => setEditing(false)}
-                className="px-6 py-3 cursor-pointer rounded-xl text-gray-700 font-semibold border border-gray-300 hover:bg-gray-100 transition-all"
+                className="px-4 py-2 cursor-pointer rounded-xl text-gray-700 font-semibold border border-gray-300 hover:bg-gray-100 transition-all"
               >
                 Cancel
               </button>
