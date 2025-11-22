@@ -25,7 +25,7 @@ export interface User extends Document {
   role: string;
   addresses: Address[];
   expiresAt?: Date;
-
+  cart: CartItem[];
 }
 
 const AddressSchema = new Schema<Address>({
@@ -76,9 +76,21 @@ const UserSchema: Schema<User> = new Schema(
       type: [AddressSchema],
       default: [],
     },
+
+    // ✅ ADD CART HERE
+    cart: {
+      type: [
+        {
+          trophyId: { type: Schema.Types.ObjectId, ref: "Trophy", required: true },
+          quantity: { type: Number, default: 1 },
+        },
+      ],
+      default: [],
+    },
+
     expiresAt: {
       type: Date,
-      default: () => new Date(Date.now() + 10 * 60 * 1000), // 10 min from creation
+      default: () => new Date(Date.now() + 10 * 60 * 1000),
       expires: 0,
     },
   },
@@ -87,7 +99,7 @@ const UserSchema: Schema<User> = new Schema(
 
 UserSchema.pre("save", function (next) {
   if (this.verified) {
-    this.expiresAt = undefined; 
+    this.expiresAt = undefined;
   } else if (!this.expiresAt) {
     this.expiresAt = new Date(Date.now() + 10 * 60 * 1000);
   }
