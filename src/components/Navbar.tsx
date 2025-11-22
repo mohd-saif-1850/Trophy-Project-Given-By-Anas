@@ -143,10 +143,10 @@ export default function Navbar() {
         isScrolled ? "bg-white/80 backdrop-blur-md shadow-sm" : "bg-transparent"
       }`}
     >
-      <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
+      <div className="max-w-7xl mx-auto flex items-center justify-between px-2 md:px-6 py-4">
         <Link
           href="/"
-          className="text-2xl font-semibold tracking-wide text-gray-800"
+          className="text-xl md:text-2xl font-semibold text:sm tracking-wide text-gray-800"
         >
           A.H <span className="text-blue-600">Handicraft</span>
         </Link>
@@ -154,14 +154,14 @@ export default function Navbar() {
         <div className="flex-1 mx-4 relative" ref={searchRef}>
           <form
             onSubmit={handleSearchSubmit}
-            className="flex items-center bg-gray-100 rounded-full px-3 py-1 max-w-lg mx-auto"
+            className="flex items-center bg-gray-100 rounded-full px-1 py-2 w-full md:max-w-lg mx-auto text-sm"
           >
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search trophies..."
-              className="bg-transparent outline-none px-2 text-sm w-full"
+              className="bg-transparent outline-none px-1 md:px-2 text-sm w-full"
             />
             <button
               type="submit"
@@ -211,7 +211,7 @@ export default function Navbar() {
 
           <button
             onClick={() => setMenuOpen(!menuOpen)}
-            className="p-2 rounded-md hover:bg-gray-100 transition"
+            className="p-2 cursor-pointer rounded-md hover:bg-gray-100 transition"
           >
             {menuOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
@@ -235,7 +235,7 @@ export default function Navbar() {
           {session && (
             <button
               onClick={handleLogout}
-              className="flex items-center justify-center gap-2 py-2 rounded-md bg-red-500 hover:bg-red-600 text-white transition"
+              className="flex cursor-pointer items-center justify-center gap-2 py-2 rounded-md bg-red-500 hover:bg-red-600 text-white transition"
             >
               <LogOut size={18} /> Logout
             </button>
