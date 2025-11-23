@@ -148,12 +148,14 @@ export default function Navbar() {
       }`}
     >
       <div className="max-w-7xl mx-auto flex items-center justify-between px-2 md:px-6 py-4">
-        <Link
-          href="/"
-          className="md:text-2xl font-semibold text:sm tracking-wide text-gray-800"
-        >
-          A.H <span className="text-blue-600">Handicraft</span>
+        <Link href="/">
+          <img
+            src="/ahhandicraft withuot bg.png"
+            alt="Ah-Handicraft Logo"
+            className="w-18 h-18 rounded-full object-cover"
+          />
         </Link>
+
 
         <div className="flex-1 mx-4 relative" ref={searchRef}>
           <form
