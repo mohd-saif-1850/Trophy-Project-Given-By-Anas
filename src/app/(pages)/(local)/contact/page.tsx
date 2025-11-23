@@ -74,7 +74,7 @@ export default function ContactPage() {
               <div>
                 <h3 className="font-semibold text-lg">Our Address</h3>
                 <p className="text-gray-700">
-                  ALA HAZRAT HANDICRAFT<br />
+                  AALA HAZRAT HANDICRAFT<br />
                   Pandia, Kundarki, Bilari<br />
                   Muradabad – 2024131 (UP)
                 </p>
