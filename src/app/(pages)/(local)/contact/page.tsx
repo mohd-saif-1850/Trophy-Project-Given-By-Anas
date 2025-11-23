@@ -74,9 +74,9 @@ export default function ContactPage() {
               <div>
                 <h3 className="font-semibold text-lg">Our Address</h3>
                 <p className="text-gray-700">
-                  ALA HAZRAT HANDICRAFT<br />
+                  AALA HAZRAT HANDICRAFT<br />
                   Pandia, Kundarki, Bilari<br />
-                  Muradabad – 2024131 (UP)
+                  Moradabad – 202413 (UP)
                 </p>
               </div>
             </div>
@@ -85,7 +85,7 @@ export default function ContactPage() {
               <Phone className="w-7 h-7 text-blue-600" />
               <div>
                 <h3 className="font-semibold text-lg">Phone</h3>
-                <p className="text-gray-700">+91 9876543210</p>
+                <p className="text-gray-700">+91 9012143851</p>
               </div>
             </div>
 
@@ -93,7 +93,7 @@ export default function ContactPage() {
               <Mail className="w-7 h-7 text-blue-600" />
               <div>
                 <h3 className="font-semibold text-lg">Email</h3>
-                <p className="text-gray-700">support@ahhandicraft.com</p>
+                <p className="text-gray-700">alahazrathandicraft@gmail.com</p>
               </div>
             </div>
           </div>
