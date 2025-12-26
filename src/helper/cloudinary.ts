@@ -9,13 +9,17 @@ cloudinary.config({
 });
 
 export async function uploadToCloudinary(file: File, folder?: string) {
-  const tempDir = "tmp"
+  const tempDir = "/tmp";
 
   if (!fs.existsSync(tempDir)) {
     fs.mkdirSync(tempDir, { recursive: true });
   }
 
-  const tempFilePath = path.join(tempDir, `${Date.now()}-${file.name}`);
+  const tempFilePath = path.join(
+    tempDir,
+    `${Date.now()}-${file.name}`
+  );
+
   const buffer = Buffer.from(await file.arrayBuffer());
   fs.writeFileSync(tempFilePath, buffer);
 
@@ -25,7 +29,9 @@ export async function uploadToCloudinary(file: File, folder?: string) {
       resource_type: "auto",
     });
 
-    fs.unlinkSync(tempFilePath);
+    if (fs.existsSync(tempFilePath)) {
+      fs.unlinkSync(tempFilePath);
+    }
 
     return {
       success: true,
@@ -35,18 +41,25 @@ export async function uploadToCloudinary(file: File, folder?: string) {
   } catch (error: any) {
     console.error("Cloudinary upload error:", error.message);
 
-    if (fs.existsSync(tempFilePath)) fs.unlinkSync(tempFilePath);
+    if (fs.existsSync(tempFilePath)) {
+      fs.unlinkSync(tempFilePath);
+    }
 
-    return { success: false, message: "Image upload failed!" };
+    return {
+      success: false,
+      message: "Image upload failed!",
+    };
   }
 }
 
 export async function deleteFromCloudinary(publicId: string) {
   try {
     const result = await cloudinary.uploader.destroy(publicId);
+
     if (result.result === "ok") {
       return { success: true, message: "Image deleted successfully!" };
     }
+
     return { success: false, message: "Image deletion failed!" };
   } catch (error: any) {
     console.error("Cloudinary delete error:", error.message);
