@@ -9,7 +9,7 @@ cloudinary.config({
 });
 
 export async function uploadToCloudinary(file: File, folder?: string) {
-  const tempDir = path.join("public", "temp");
+  const tempDir = "temp"
 
   if (!fs.existsSync(tempDir)) {
     fs.mkdirSync(tempDir, { recursive: true });
