@@ -1,6 +1,4 @@
 import { v2 as cloudinary } from "cloudinary";
-import fs from "fs";
-import path from "path";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -9,60 +7,42 @@ cloudinary.config({
 });
 
 export async function uploadToCloudinary(file: File, folder?: string) {
-  const tempDir = "/tmp";
-
-  if (!fs.existsSync(tempDir)) {
-    fs.mkdirSync(tempDir, { recursive: true });
-  }
-
-  const tempFilePath = path.join(
-    tempDir,
-    `${Date.now()}-${file.name}`
-  );
-
   const buffer = Buffer.from(await file.arrayBuffer());
-  fs.writeFileSync(tempFilePath, buffer);
 
-  try {
-    const result = await cloudinary.uploader.upload(tempFilePath, {
-      folder: folder || "uploads",
-      resource_type: "auto",
-    });
-
-    if (fs.existsSync(tempFilePath)) {
-      fs.unlinkSync(tempFilePath);
-    }
-
-    return {
-      success: true,
-      url: result.secure_url,
-      public_id: result.public_id,
-    };
-  } catch (error: any) {
-    console.error("Cloudinary upload error:", error.message);
-
-    if (fs.existsSync(tempFilePath)) {
-      fs.unlinkSync(tempFilePath);
-    }
-
-    return {
-      success: false,
-      message: "Image upload failed!",
-    };
-  }
+  return await new Promise((resolve, reject) => {
+    cloudinary.uploader
+      .upload_stream(
+        {
+          folder: folder || "uploads",
+          resource_type: "auto",
+        },
+        (error, result) => {
+          if (error) {
+            reject({
+              success: false,
+              message: "Image upload failed!",
+            });
+          } else {
+            resolve({
+              success: true,
+              url: result?.secure_url,
+              public_id: result?.public_id,
+            });
+          }
+        }
+      )
+      .end(buffer);
+  });
 }
 
 export async function deleteFromCloudinary(publicId: string) {
   try {
     const result = await cloudinary.uploader.destroy(publicId);
-
     if (result.result === "ok") {
       return { success: true, message: "Image deleted successfully!" };
     }
-
     return { success: false, message: "Image deletion failed!" };
-  } catch (error: any) {
-    console.error("Cloudinary delete error:", error.message);
+  } catch {
     return { success: false, message: "Image deletion failed!" };
   }
 }
