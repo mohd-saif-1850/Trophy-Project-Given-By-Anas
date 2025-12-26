@@ -1,15 +1,29 @@
 import { v2 as cloudinary } from "cloudinary";
 
+type CloudinaryUploadResult =
+  | {
+      success: true;
+      url: string;
+      public_id: string;
+    }
+  | {
+      success: false;
+      message: string;
+    };
+
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-export async function uploadToCloudinary(file: File, folder?: string) {
+export async function uploadToCloudinary(
+  file: File,
+  folder?: string
+): Promise<CloudinaryUploadResult> {
   const buffer = Buffer.from(await file.arrayBuffer());
 
-  return await new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     cloudinary.uploader
       .upload_stream(
         {
@@ -17,16 +31,16 @@ export async function uploadToCloudinary(file: File, folder?: string) {
           resource_type: "auto",
         },
         (error, result) => {
-          if (error) {
-            reject({
+          if (error || !result) {
+            resolve({
               success: false,
               message: "Image upload failed!",
             });
           } else {
             resolve({
               success: true,
-              url: result?.secure_url,
-              public_id: result?.public_id,
+              url: result.secure_url,
+              public_id: result.public_id,
             });
           }
         }
